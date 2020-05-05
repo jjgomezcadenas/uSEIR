@@ -17,14 +17,74 @@
 
 \section{Introduction}
 
-A burgeoning number of papers have been published over the last few months in the context of the huge scientific effort to understand the current COVID-19 pandemics \footnote{See for example, the CMMID repository, \url{https://cmmid.github.io/topics/covid19/}}. Among these, a large fraction corresponds to papers attempting to model the dynamics of the epidemics. Two main approaches are used in such modelling efforts. One of them, called ABM (agent based models) is based in a microscopic approach in which individual ``agents'' are allowed to interact under some circumstances ---often described by a spatial grid, a connection network or both--- and the parameters of the infection are obtained as ``macroscopic measurements'' of such interactions (much in the same way that pressure and temperature characterise the interaction of molecules in a gas) \cite{Hunter2017}.  A second approach is based in obtained deterministic solutions to a set of differential equations (DEM or differential equation models) which purportedly capture the dynamics of the disease\cite{Hethcote2000}. While ABMs are a relatively new approach, DEMs have been used for almost 100 years, since the original formulation of the SIR (susceptible - infected - recovered) model by Kermack and McKendrick \cite{Kermack1927}. In particular, the so called SEIR (susceptible - exposed - infected - recovered) models have been extensively used in epidemiology \cite{Hethcote2000}, both in the past and in the context of the current crisis \cite{Tang2020}.
+A burgeoning number of papers attempting to model the dynamics of the COVID-19 pandemic have been published over the last few months \footnote{See for example, the CMMID repository, \url{https://cmmid.github.io/topics/covid19/}}. Among these, a large fraction are based in more or less complex variants of the classical SEIR (susceptible - infected - recovered) model \cite{Tang2020, Lin2020, Lopez2020}. The simplest set of SEIR equations (without demography) have the form \cite{Hethcote2000}:
 
-It has been recently pointed out that SEIR models fail to describe properly the delay introduced by the incubation time of the disease \cite{fodor2020integral}. As an alternative to DEMs the authors of \cite{fodor2020integral} propose integral equation models. 
+\begin{align}
+\label{eq:stdS}
+\dot S(t) &= -\beta \frac{I(t)S(t)}{N(t)}\,, \\
+\label{eq:stdE}
+\dot E(t) &= \beta\frac{I(t)S(t)}{N(t)} - \sigma E(t)\,, \\
+\label{eq:stdI}
+\dot I(t) &= \alpha E(t) - \gamma) I(t)\, , \\
+\label{eq:stdR}
+\dot R(t) &= \gamma I(t)\,,\\
+N(t) &= S(t) + E(t) + I(t) + R(t)\,.
+\end{align}
 
-Prompted by these observations as well as by the imperious need to better understand the tools used for modelling and forecasting, given their potential impact in decision-making policies, this paper presents a new formulation of the SEIR problem, which we call uSEIR (where the u stands for Unitary) in which a new set of differential equations is deduced from first-principles. We use an ABM calculation to demonstrate that the results of uSEIR are matched by a microscopic simulation of a fully homogeneous, fully susceptible population in the deterministic limit (e.g, with no stochasticity in the model parameters). Furthermore we show that the classic SEIR solution does not match the ABM result. We then obtain the limit in which uSEIR and SEIR converge. This turns out to be the case in which both the incubation and recovery time are assumed to be distributed exponentially. Given the fact that such assumption does not appear to be realistic ---the data is much better described by gamma, lognormal of Weibull distributions---, we also conclude that the use of classic SEIR model does not appear to be justified. 
+The interpretation of the parameters is as follows:
+\begin{itemize}
+\item $\sigma = 1/t_i$, where $t_i$ is the incubation period.
+\item $\beta$, and the term it multiplies, model the transmission: at any time $t$, the amount
+of people who becomes exposed is proportional to the number of infectious people $I$, and
+the density $S/N$ of susceptible population. The coefficient $\beta$ could be further thought
+as the product of two factors, $\beta =c \cdot p$: $x$ would be the number of contacts per
+unit time (i.e., it is related to population dynamics), while $p$ would be the probability
+of transmission per contact (which depends on the disease dynamics). Therefore $\beta$ can be envision as a contagion rate (probability of transmission per unit time). 
+\item $\gamma = 1/t_r$ where $t_r$ is often called the recovery time (but also the removal time), and measures the span in which individuals are infectious. 
+\end{itemize}
+
+The basic reproduction rate $R_0$ can be calculated (in the absence of demography) as the product of three factors:
+(probability of transmission per contact~$\times$~number of contacts per unit time)~$\times$~
+(duration of infection)~$\times$:
+\begin{equation}
+R_0 = \frac{\beta \sigma}{\gamma} = \frac{\beta \cdot t_r}{t_i}\,.
+\end{equation}
+
+The classical (minimal) SEIR model assume an homogenous population and describes the transit through four compartments: $S \rightarrow E$, which is controlled by $\beta$ ; $E \rightarrow I$, controlled by $t_i$ and
+$I \rightarrow R$ controlled by $t_r$. 
+
+It has been recently pointed out that SEIR models fail to describe properly the dynamics of an epidemic outbreak since they do not take into account properly the delay introduced by the incubation time of the disease \cite{fodor2020integral}. As an alternative to DEMs the authors of \cite{fodor2020integral} propose integral equation models. 
+
+Prompted by a recent claim according to which SEIR 
+models fail to describe properly the dynamics of an outbreak (e.g, because they cannot describe the delay introduced by the incubation time of the disease) \cite{fodor2020integral}. Prompted by these observations as well as by the imperious need to better understand the tools used for modelling and forecasting, given their potential impact in decision-making policies, this paper presents a new formulation of the SEIR problem, which we call uSEIR (where the u stands for Unitary) in which a new set of differential equations is deduced from first-principles.
+
+As a tool to check the predictions of uSEIR as well as the comparison with SEIR, we use an Agent Based Model (ABM) software based [REF]. ABMs use a microscopic approach in which individual ``agents'' are allowed to interact under some circumstances ---often described by a spatial grid, a connection network or both--- and the parameters of the infection are obtained as ``macroscopic measurements'' of such interactions (much in the same way that pressure and temperature characterise the interaction of molecules in a gas) \cite{Hunter2017}. 
+
+This work is organised as follows. Our ABM software is described in section \ref{sec:abm}, where we also show simulations for an epidemics with typical COVID-19 parameters. Three case of relevance for the subsequent discussion are considered, corresponding to treating $t_i, t_r$ as non-stochastic (fixed, or F), exponentially distributed (E) or gamma distributed (G). 
+
+Section \ref{sec:useir} presents the uSEIR model and compares its predictions with the classical SEIR model and and the ABM calculations. We demonstrate that uSEIR accurately describes the ABM simulations both in the case of fixed an stochastic parameters, while SEIR describes the simulations only for exponentially distributed parameters. Indeed, we show that SEIR can be deduced from uSEIR under the assumption o E-distributed $t_i, t_r$. This result, in fact, questions the validity of SEIR in as much as an exponential distribution is a very poor approach for both $t_i$ and $t_r$, which are often described by gamma distributions, in which case SEIR does not describe the ABM simulations. 
+
+Section \ref{sec:stoc} considers the stochasticity in $R_0$ (or equivalently in $p$). ABM simulations show that the result of considering an stochastic distribution for $p$ (for example using the negative binomial distribution, which describes well the relative large frequency o super spreading events) is a family of overly spread outbreak curves which appear identical but displaced in time. Clearly the average of all those curves is not a good description of any of the outbreaks. Instead, we show that uSEIR equations have a universal solution which describe any of those curves, which only differ in a time shit. We furthermore deduce an analytical formula that describes such universal solution. 
+
+In section \ref{sec:fits} we fit uSEIR to data. 
+
+In section \ref{sec:conclu} we conclude. 
+
+\section{ABM simulations} 
+\label{abm}
+Barrio tortuga. 
+
+
+%
+% The mcorresponds to papers attempting to model the dynamics of the epidemics. Within  Two main approaches are used in such modelling efforts. One of them, called ABM (agent based models) is based in a microscopic approach in which individual ``agents'' are allowed to interact under some circumstances ---often described by a spatial grid, a connection network or both--- and the parameters of the infection are obtained as ``macroscopic measurements'' of such interactions (much in the same way that pressure and temperature characterise the interaction of molecules in a gas) \cite{Hunter2017}.  A second approach is based in obtained deterministic solutions to a set of differential equations (DEM or differential equation models) which purportedly capture the dynamics of the disease\cite{Hethcote2000}. While ABMs are a relatively new approach, DEMs have been used for almost 100 years, since the original formulation of the SIR (susceptible - infected - recovered) model by Kermack and McKendrick \cite{Kermack1927}. In particular, the so called SEIR (susceptible - exposed - infected - recovered) models have been extensively used in epidemiology \cite{Hethcote2000}, both in the past and in the context of the current crisis \cite{Tang2020}.
+%
+%It has been recently pointed out that SEIR models fail to describe properly the delay introduced by the incubation time of the disease \cite{fodor2020integral}. As an alternative to DEMs the authors of \cite{fodor2020integral} propose integral equation models. 
+%
+%Prompted by these observations as well as by the imperious need to better understand the tools used for modelling and forecasting, given their potential impact in decision-making policies, this paper presents a new formulation of the SEIR problem, which we call uSEIR (where the u stands for Unitary) in which a new set of differential equations is deduced from first-principles. We use an ABM calculation to demonstrate that the results of uSEIR are matched by a microscopic simulation of a fully homogeneous, fully susceptible population in the deterministic limit (e.g, with no stochasticity in the model parameters). Furthermore we show that the classic SEIR solution does not match the ABM result. We then obtain the limit in which uSEIR and SEIR converge. This turns out to be the case in which both the incubation and recovery time are assumed to be distributed exponentially. Given the fact that such assumption does not appear to be realistic ---the data is much better described by gamma, lognormal of Weibull distributions---, we also conclude that the use of classic SEIR model does not appear to be justified. 
 
 
 \section{Unitary SEIR model}
+\label{sec:useir}
 We start by considering a model with compartments for susceptible, exposed, infected and recovered individuals at any given time $t$. To be precise we define these categories
 as:
 \begin{itemize}
@@ -186,9 +246,6 @@ where $t_i$ and $t_r$ might also depend on the category.
 In the previous model it is easy to include a possible time varying function $r_{S\rightarrow E}(t)$, as will be typically the case in an epidemic when isolation measures are taken, which typically reduce the number of contacts per unit time (ie. keeping people isolated) or the probability of infection per contact (ie. wearing masks) or both. 
 
 
-\section{Agent Based Simulations} 
-
-A number of software packages are available to simulate a epidemic 
 
 
 \section{uSEIR versus Turtles}
@@ -232,7 +289,9 @@ We compare the results of the simulations with the exponential and gamma distrib
    \end{eqnarray} 
    For Covid19, with $R_0 \sim 3$, $f_I \sim 0.7$, that is $70\%$ of the population. One would naively estimate then that in a given epidemic with this herd immunity would result in a 
  fraction of  population that gets infected at some point of 70$\%$, but what we have seen is that the fraction is much larger, both in the SEIR equations as in the simulations. This is because of the time delay in the process, the fraction of recovered individuals grows slowly and is not effective in reducing the growth of the epidemic sufficiently, as if the fraction of immune individuals would be there from the start. 
- 
+
+\section{The case of stochastic $R-0$}
+\label{sec:useir} 
  The non-uniformity of $R_0$ is however very important. It has been argued that for Covid19 this distribution of this quantity is well described by the negative binomial distribution, $NB[0.16,0.0437]$, which has average 3.5 but a large dispersion. This distribution implies that about $60\%$ of the population would not infect anyone (not far from the naive herd immunity), while there must be few individuals that have a very large rate of infection, the superspreaders. One can get an idea of the relevance of the distribution in $R_0$ by solving the uSEIR equations changing the value of $R_0$  as drawn from the averages over the population with $N$ individuals. This is shown on the left of Fig.~\ref{fig:dispersion}. Each curve correspond to the the uSEIR equations with $R_0$ being the average over the population. Since this average has some variance, the curves evolve differently. However much more important is the effect of the initial conditions, which are completely non-universal. We can mimic this effect by measuring the average $R_0$ of the 10 initially infected individuals.  We can simply take the rate of infection to be this value for $t< tr$ and change to the population average after this time (in reality the evolution will be more smooth of course). The effect of this is shown on the right Fig.~\ref{fig:dispersion}. The history of each epidemic is strongly dependent on the initial conditions which are quite random. It is not clear what we gain 
  from the average, since each epidemic will have a unique starting point. 
 \begin{figure}[h!]
@@ -313,75 +372,13 @@ a\sim t_i^{-1} \rightarrow F_0 \simeq {2 \over t_r t_i r^2}.
 With this we conclude that the epidemic curve is universal once the value of the maximum position is determined. 
 The only dependence on the initial condition remains in $t_{\rm max}$. 
 
-\subsection{Time-varying Parameters}
-\section{Conclusions}
+%\subsection{Time-varying Parameters}
 
-%\end{document}
-%
-%\title{SEIR de andar por casa}
-%
-%A ver, he estado intentado entender el asunto del tiempo de incubaci\'on y de recuperaci\'on en el SEIR y he llegado a la conclusi\'on de que 
-%no lo entiendo, en particular que el n\'umero de infectados en tiempo $t$ sea proporcional al n\'umero de expuestos en tiempo $t$...
-%
-%Si hago las siguientes asumptions:
-%\begin{itemize}
-%\item hay un tiempo de incubaci\'on $t_i$ igual para todos los individuos
-%\item hay un tiempo de recuperaci\'on $t_r$ igual para todos los individuos
-%\end{itemize}
-%las ecuaciones que para mí tendrían sentido, en términos de unitariedad, son las siguientes:
-%\begin{eqnarray}
-%{d S\over d t} & = & - \alpha I(t) S(t),\\
-%{d E\over d t} & = & \alpha I(t) S(t) - \alpha I(t-t_i) S(t-t_i)  \theta(t-t_i),\\
-%{d I\over d t} & = & \alpha I(t-t_i) S(t-t_i) \theta(t-t_i) - \alpha I(t-t_i-t_r) S(t-t_i-t_r)  \theta(t-t_i-t_r),\\
-%{d R\over d t} & = & \alpha I(t-t_i-t_r) S(t-t_i-t_r)  \theta(t-t_i-t_r),\\
-%\end{eqnarray}
-%donde
-%\begin{eqnarray}
-%\alpha= {R_0\over N t_r} 
-%\end{eqnarray}
-%En esencia, los que pasan a infectados en tiempo $t$ son los que estaban pasando a expuestos a tiempo $t-t_i$, y los que pasan 
-%a recuperados a tiempo $t$ los que estaban pasando a expuestos a tiempo $t-t_i-t_r$...
-%
-%Comparo con la soluci\'on SEIR (dashed) con supuestamente los mismos par\'ametros donde $t_i$ y $t_r$ si entiendo bien aparecen en los
-%rates. Asumo $S[0] = 1000, I[0] =1,  t_r=15,  t_i=5 , \alpha=R_0/t_r = 1/5$.
-% \begin{figure}[h!]
-%  \centering
-%  \includegraphics[width=8cm]{sir.pdf}
-%   \end{figure}  
-%
-%Hay que hacer una pequeña modificaci\'on para que los que est\'an infectados al principio $I[0] = I_0$ decaigan tambi\'en (si no se quedan en el limbo):
-%\begin{eqnarray}
-%{d S\over d t} & = & - \alpha \tilde{I}(t) S(t),\\
-%{d E\over d t} & = & \alpha \tilde{I}(t) S(t) - \alpha \tilde{I}(t-t_i) S(t-t_i)  \theta(t-t_i),\\
-%{d I\over d t} & = & \alpha \tilde{I}(t-t_i) S(t-t_i) \theta(t-t_i) - \alpha \tilde{I}(t-t_i-t_r) S(t-t_i-t_r)  \theta(t-t_i-t_r),\\
-%{d R\over d t} & = & \alpha \tilde{I}(t-t_i-t_r) S(t-t_i-t_r)  \theta(t-t_i-t_r),\\
-%\end{eqnarray}
-%with
-%\begin{eqnarray}
-%\tilde{I}(t) \equiv I(t) - I(0) \theta(t-t_r)\
-%\end{eqnarray}
-%
-%Para incluir una estocasticidad en el valor de $t_i$, a\~nadimos una integral en los t\'erminos de la derecha de la forma
-%\begin{eqnarray}
-%\int dt_i P(t_i) (...),
-%\end{eqnarray}
-%donde asumimos un distribuci\'on $\gamma$ con $(k,\theta)=(5.8,0.948)$ \cite{}. En la pr\'actica Mathem\'atica no sabe hacer esto, as\'{\i} que 
-%divido la distribuci\'on en tres rangos $[0,t_1], [t_1,t_2], [t_2,\infty]$, con probabilidad $\sim 0.3$ cada uno,  donde tomo la media $\langle t_i\rangle_{1-3}$ en el intervalo y hago la integral como suma 
-%de tres t\'erminos:
-%\begin{eqnarray}
-%\int d t_i P(t_i) f(t_i) \simeq \sum_k f(\langle t_i\rangle_k) \int_{t_k^{min}} ^{t_k^{max}}  P(t_i) 
-%\end{eqnarray}
-%The comparison of the evolution of infected with an average $t_i$ or an integral with three ranges is shown in \ref{fig:comp}
-% \begin{figure}[h!]
-%  \centering
-%  \includegraphics[width=8cm]{deltavs3.pdf}
-%  \label{fig:comp}
-%  \caption{Unitary SEIR with fixed $t_i=5.5$ (solid) or with three ranges according to the $\gamma$ distribution (dashed).}
-%   \end{figure}  
-%We can do the same for changing $t_r$ instead, while any possible change to $\alpha$ of this form would not modify the result for fixed $\langle \alpha\rangle$. 
-%
-%What is clear is that if we start with the measured $R_0$, unless there is a change with time of $\alpha$ there 
-%
+\section{Fits to data} 
+\label{sec:fits}
+\section{Conclusions}
+\label{sec:conclu}
+
 \bibliographystyle{unsrt}
 \bibliography{refs}
 \end{document}
