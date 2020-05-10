@@ -12,7 +12,7 @@
 \vskip 2truemm
 \thicktablerule
 \vskip 2truemm
-\noindent{\large P. Hern\'andez, Carlos~Pena, JJGC \hfill May 2020}
+\noindent{\large P. Hern\'andez, C. Pena, A. Ramos, J.J. G\'omez-Cadenas\hfill May 2020}
 \vskip 10truemm
 
 \section{Introduction}
@@ -115,8 +115,7 @@ r_{S\rightarrow E} = {R_0\over N t_r}.
 
 Since $R_0$ is clearly proportional to $t_r$, it follows that $r_{S\rightarrow E}$ is not. In a microscopic description of the infected process we expect that the rate $r_{S\rightarrow E}$ is basically the product of the number of contacts per unit time and the probability of infection per contact. 
 
-
-  
+The  formulation of SEIR in the form of eqs.~(\ref{eqs:cor}) we will refer to in the following as uSEIR. Although we are not aware of this precise formulation in the literature,  similar ideas of keeping track of delay have been discussed, mostly in the context of SIR in refs. \cite{}.
   
   We can confront both solutions to an agent-based simulations, the details of which are summarized in the Appendix A. 
 In Fig.~\ref{fig:fixed} we show the curve for the fraction of infected individuals as a function of time measured from 10 independent simulations in a population of $10^4$ agents with 10 being infected at the initial time, and fixed parameters $t_i$, $t_r$ and $r_{S\rightarrow E}$ for all agents. 
@@ -235,7 +234,12 @@ We compare the results of the agent simulations with the exponential and gamma d
    
 \section{Non-uniform rate and universality }
 \label{sec:r}
-A different situation is when the rate of infection is non-uniform across the population. We could separate the population in individuals that infect others with different rates. The rate might depend on the type of infectious individual and the type of susceptible individual. Defining $r^{j}_{i}$ to be the rate at which an infected individual of type $j$ infects a susceptible individual of type $i$. The equations in this case are:
+A different situation is when the rate of infection is non-uniform across the population. It is important to stress that the rate depends on two independent parameters: the number of contacts per infected individual, which critically depends on the clustering properties of the social network,  and the probability of infection per contact. Non-uniformity can originate in either of the two elements, but the implications as we will see are quite different. In this section we will consider the simplest case of a uniform number of contacts, but a non-uniform infecting probability per contact. 
+
+\subsection{Non-uniformity in the probability of infection}
+\label{sec:prob}
+
+We could separate the population in individuals that infect others with different rates. The rate might depend on the type of infectious individual and the type of susceptible individual. Defining $r^{j}_{i}$ to be the rate at which an infected individual of type $j$ infects a susceptible individual of type $i$. The equations in this case are:
 \begin{eqnarray}
 d S_i(t) &=& - \sum_j r^j_{i}  I_j(t) S_i(t) dt, \nonumber\\
 d E_i(t) &=& -d S_i(t) + d S_i(t-t_i) \theta(t-t_i) ,\nonumber\\
@@ -349,21 +353,64 @@ In Fig.~\ref{fig:logistic} we compare the numerical solution to the uSEIR equati
   \caption{Comparison of the results from the uSEIR equations for fixed parameters $R_0=2.1$, $t_i=3$ and $t_r=3$, and the analytical result of  eq.~(\ref{eq:tanh}) with the parameters $F_0$ and $t_{\rm max}$ tuned with the height and position of the peak. The two pairs of solid curves correspond to a fraction of infected individuals of $10^{-3}$ and $5\cdot 10^{-4}$. The two dashed lines are the same function shifted in time.}
   \label{fig:dispersion}
    \end{figure}  
-  %One can get an idea of the relevance of the distribution in $R_0$ by %solving the uSEIR equations changing the value of $R_0$  as drawn from %the averages over the population with $N$ individuals. This is shown on %the left of Fig.~\ref{fig:dispersion}. Each curve correspond to the the %uSEIR equations with $R_0$ being the average over the population. Since %this average has some variance, the curves evolve differently. However %much more important is the effect of the initial conditions, which are %completely non-universal. We can mimic this effect by measuring the %average $R_0$ of the 10 initially infected individuals.  We can simply %take the rate of infection to be this value for $t< tr$ and change to the %population average after this time (in reality the evolution will be more %smooth of course). The effect of this is shown on the right %Fig.~\ref{fig:dispersion}. The history of each epidemic is strongly %dependent on the initial conditions which are quite random. It is not %clear what we gain 
- %from the average, since each epidemic will have a unique starting point. 
- \subsection{Time-varying parameters}
- 
- The parameters of the epidemic might not be uniform, because they change in time or across the population and in genera both, as measures are taken to 
- fight the spread of the epidemic. This is an essential effect since it should modify in a drastic way the height of the peak of infected population that would otherwise
- be controlled by the herd inmmunity which is typically much larger. 
+   
+   \section{Non-uniform rate: clustering  }
+\label{sec:r}
 
-In the previous model it is easy to include a possible time varying function $r_{S\rightarrow E}(t)$, as will be typically the case in an epidemic when isolation measures are taken, which typically reduce the number of contacts per unit time (ie. keeping people isolated) or the probability of infection per contact (ie. wearing masks) or both. 
+The rate may also be non-uniform because the number of contacts per infecting individual is inhomegeneous in the population. The most efficient way to describe this situation is via the evolution of the epidemic on a network with variable topology \cite{}. 
 
-\section{An attempt at real data ?}
+A network is just a graph \(\{G,E\}\)
+consisting on 
+nodes \(G=\{n_i\}_{i=1}^N\) and edges linking two nodes, \(E=\{e_{i,j}\}\). We say that
+two nodes \(n_a\) and \(n_b\) are connected if \(e_{ab}\in E\). The number
+of edges attached to a node \(n_a\) is called its degree and labelled
+\(k_a\).
+
+In the context of the spread of an infectious disease, the nodes are
+the individuals, and the edges represent the net of individuals 
+that have direct contact with him, and are therefore susceptible of being infected by it. The number of edges is therefore the number of contacts. The spread of the disease emerges from the local interaction between nodes via edges. More concretely, in each time step, any infected node $i$ selects randomly one the edges attached to it, for example $e_{i,j}$, and infects the adjacent node, $j$, with a uniform probability $p$. 
+
+ There is empirical experience that realistic networks have some key
+properties that might be relevant for the rate of spread of an epidemic. 
+They are scale-free, that is the distribution of the degree (i.e. the number of contacts per node) has the form \(P(k)\sim k^{-\gamma}\). In such networks the dispersion of the number of edges is large. Realistic networks have a large clustering coefficient, which measures the probability that two nodes connected to a third, are also connected among themselves. Intuitively, it is clear that the spread of a disease in a network with large clustering is less efficient, because it is difficult for the infectious agent to jump between clusters. 
+
+We will concentrate on a particular
+one-parameter family of scale-free networks described by Klemm and Eguiluz (KE) 
+\cite{Klemm_2002}, where the average local clustering can be tuned with the free parameter, \(\mu\). In Fig.~\ref{fig:KE} we show the distribution of $k$ on the KE networks varying $\mu$, compared to a random network with no clustering . Even if two networks share the number of nodes, edges and the degree distribution, they can look very different if the average clustering coefficient, $C_i$ is different, with
+\begin{eqnarray}
+C_i \equiv \frac{2|\{e_{jk}\setminus e_{ji},e_{ki},e_{jk}\in E\}|}{k_i(k_i-1)}\,.
+\end{eqnarray}
+In Figs.~\ref{fig:networks} two networks with different $C_i$ are shown.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.45\linewidth]{ke_05_09.pdf} \includegraphics[width=.45\linewidth]{ke_05_01.pdf}
+\caption{Two examples of KE network with 500 nodes, mean degree \(\langle k \rangle=9.93\) and different clustering: \(\langle C_i \rangle = 0.5\) (\(\mu=0.9\)) (Left) and \(\langle C_i \rangle = 0.07\) ( \(\mu=0.1\)) (Right)}
+\end{figure}
+
+\subsection{Simulating the epidemics evolution on a network}
+
+The evolution of the disease in any of the networks is monitored by the number of nodes in states $S, E, I, R$ at any step. Starting with a fraction of  infected nodes, the infected nodes proceed to infect other susceptible nodes with the rules described above,  changing their state to $E$. The nodes in state $E$ move to state $I$, with a delay given by a fixed incubation time. In state $I$ the start infecting susceptibles connected to them, and remain doing so before a the removal time, $t_r$, elapses at which point they change state to $R$ and remain there. 
+
+If Fig.~\ref{fig:useirvsnet} we show the evolution of infected individuals as a function of time for various networks with different clustering properties. The simulation points correspond to the average of xx simulations after a shift of $t_{\rm max}$ to match the position of the maxima. We find very good agreement with the universal behaviour that derives from uSEIR, eq.~(\ref{eq:tanh}), in all cases. However the fitted value of $a$ changes with the topology of the network. In Fig.~\ref{} we show the dependence of
+$a$ on the clustering parameter $\mu$. This is in clear contrast with the situation we observed for the inhomogenities in the probability of infection, where the curves matched the average value of the microscopic parameter $a$. The networks we are considering have all the same average degree and therefore the same average number of contacts. Since the probability of infection is also constant, this means that the average 
+microscopic $a$ is the same, but the {\it effective} one varies with the clustering. 
+\begin{figure}[htbp]
+\centering
+ \includegraphics[width=.8\linewidth]{uSEIR.pdf}
+\caption{Average fraction of infected nodes with time in networks with equal average degree but different clustering properties. The curves are fits  to eq.~(\ref{eq:tanh}), leaving $a$, $F_0$ and $t_{\rm max}$ as free parameters. }
+\end{figure}
+
+The clustering property of the network affects the speed of propagation of the disease in the population, much like the index of refraction, affects the velocity of propagation of a particle in a medium. This was observed before ?? \cite{}. 
+
+
+
+\section{Conclusions}
 
 \section*{Appendix A} 
 
-A number of software packages are available to simulate a epidemic 
+Numerical solution of uSEIR equations.
+
 
 
   
