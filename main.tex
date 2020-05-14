@@ -15,22 +15,25 @@
 \noindent{\large P. Hern\'andez, C. Pena, A. Ramos, J.J. G\'omez-Cadenas\hfill May 2020}
 \vskip 10truemm
 
+\begin{abstract}
+We present a unitary formulation of the SEIR concept, uSEIR, that represents the   evolution of an epidemic in the assumption of homogeneity and uniformity of the microscopic parameters: rate of infection, incubation and recovery times. Non-homogeneities in the basic parameters are easily included by integration, recovering the classical SEIR model in the assumption of exponential distributions of the incubation and recovery times. We compare the solution of uSEIR to two types of agent based model simulations, a spatially homogeneous one where infection occurs by proximity, and a model on a scale-free network with varying clustering, where the infection between any two agents occurs via their link if it exists. We find good agreement in both cases with the uSEIR solution. Furthermore a family of asymptotic solutions of the uSEIR equations is found in terms of a logistic curve, which after a non-universal time shift, fits extremely well the microscopic simulations.
+    
+\end{abstract}
 \section{Introduction}
 
-A burgeoning number of papers attempting to model the dynamics of the COVID-19 pandemic have been published over the last few months \footnote{See for example, the CMMID repository, \url{https://cmmid.github.io/topics/covid19/}}. Among these, a large fraction (\cite{Tang2020, Lin2020, Lopez2020} are just a few examples) are based in more or less complex variants of the classical SEIR (susceptible - infected - recovered) model \cite{Hethcote2000}.
+A burgeoning number of papers attempting to model the dynamics of the COVID-19 pandemic have been published over the last few months \footnote{See for example, the CMMID repository, \url{https://cmmid.github.io/topics/covid19/}}. Among these, a large fraction (\cite{Tang2020, Lin2020, Lopez2020} are just a few examples) are based in more or less complex variants of the classical SEIR (susceptible - infected - recovered/removed) model \cite{Hethcote2000}.
 
 %A burgeoning number of papers have been published over the last few months in the context of the huge scientific effort to understand the current COVID-19 pandemics \footnote{See for example, the CMMID repository, \url{https://cmmid.github.io/topics/covid19/}}. Among these, a large fraction corresponds to papers attempting to model the dynamics of the epidemics. Two main approaches are used in such modelling efforts. One of them, called ABM (agent based models) is based in a microscopic approach in which individual ``agents'' are allowed to interact under some circumstances ---often described by a spatial grid, a connection network or both--- and the parameters of the infection are obtained as ``macroscopic measurements'' of such interactions (much in the same way that pressure and temperature characterise the interaction of molecules in a gas) \cite{Hunter2017}.  A second approach is based in a set of differential equations (DEM or differential equation models) which purportedly capture the dynamics of the disease\cite{Hethcote2000}. While ABMs are a relatively new approach, DEMs have been used for almost 100 years, since the original formulation of the SIR (susceptible - infected - recovered) model by Kermack and McKendrick \cite{Kermack1927}. In particular, the so called SEIR (susceptible - exposed - infected - recovered) models have been extensively used in epidemiology \cite{Hethcote2000}, both in the past and in the context of the current crisis \cite{Tang2020}.
 
-It has been recently pointed out that such models fail to describe the dynamics of the epidemics, given their inability to properly describe the delay introduced by the incubation time of the disease \cite{fodor2020integral}. As an alternative to SEIR the authors of \cite{fodor2020integral} propose integral equation models. Such models have been considered before (see for example refs.\cite{}).
+It has been recently pointed out that such models fail to describe the dynamics of the epidemics, given their inability to properly describe the delay introduced by the incubation time of the disease \cite{fodor2020integral}. As an alternative to SEIR the authors of \cite{fodor2020integral} propose integral equation models. 
 
-Prompted by these observations as well as by the imperious need to better understand the tools used for modelling and forecasting, in this paper we study a basic formulation of the SEIR problem, which properly accounts for SEIR delays that we call uSEIR (where the u stands for Unitary) in which a new set of differential equations is deduced which should represent correctly the evolution of an epidemic in the assumption of homogeneity and uniformity of the microscopic parameter, namely: i) number of contacts per unit time, ii) the probability of infection per contact, iii) the incubation time and iv) the recovery time. We demonstrate that the results of uSEIR are reproduced by a microscopic Agent Based Model (ABM) simulation of a fully homogeneous, fully susceptible population in the deterministic limit, e.g, with no stochasticity in the model parameters.
+Prompted by these observations as well as by the imperious need to better understand the tools used for modelling and forecasting, in this paper we study a basic formulation of the SEIR problem, which properly accounts for SEIR delays that we call uSEIR (where the u stands for unitary) in which a new set of differential equations is deduced which should represent correctly the evolution of an epidemic in the assumption of homogeneity and uniformity of the microscopic parameter, namely: i) number of contacts per unit time, ii) the probability of infection per contact, iii) the incubation time and iv) the recovery time. We demonstrate that the results of uSEIR are reproduced by a microscopic Agent Based Model (ABM) simulation of a fully homogeneous, fully susceptible population in the deterministic limit, e.g, with no stochasticity in the model parameters.
 
-We also show that stochastic parameters can be incorporated into our equations, and recover the classical SEIR equations in the particular case of exponentially distributed incubation and recovery times. Notice however, that the available data does not support an exponential distribution for these parameters which are usually described by gamma, lognormal or Weibull distributions [REF], none of which are correctly reproduced by classical SEIR.
+We also show that stochastic parameters can be incorporated into our equations, and recover the classical SEIR equations in the particular case of exponentially distributed incubation and recovery times. As is well known, however, the available data does not support an exponential distribution for these parameters which are usually described by gamma, lognormal or Weibull distributions \cite{}, none of which are correctly reproduced by classical SEIR.
 
-The non-uniformity in the infection rate per unit time is more subtle. While the uSEIR equations indicate that the solution should correspond to that in which the infection rate per unit time is the average one, ABM simulations show a large variability and an average that is not well described by any
-SEIR solution. We show that the main effect of this variability is a simple time translation. When the different simulations are shifted to tune their maximums of infected individuals, all the curves fall on a universal curve which is well described by the uSEIR solution. We analyse the origin of this universality, i.e. independence on initial conditions, which derives from an asymptotic solution of the uSEIR equations, which is found to be a logistic curve that depends on the average infection rate.
+The non-uniformity in the infection rate per unit time is more subtle. Two sources  for this non-uniformity are considered: inhomegeneity in the probability of infection per contact or inhomegeneity in the number of contacts per individual. The first is modelled with an ABM model with a negative binomial distribution of the corresponding probabilities, the second is modelled with a simulation on a scale-free network. While the uSEIR equations indicate that the solution should correspond to that in which the infection rate per unit time is the average one, both types of simulations show a large variability, and an average that is not well described by any uSEIR solution. We show that the main effect of this variability is a simple time translation. When the different simulations are shifted to tune their maxima of infected individuals, all the curves fall on a universal curve correctly reproduced by the uSEIR equations. We analyse the origin of this universality, i.e. independence on initial conditions, which derives from an asymptotic solution of the uSEIR equations, which is found to be a logistic curve that depends on the average infection rate. In the case of networks we briefly comment on the effect of clustering on the dynamics of the epidemic. 
 
-The structure of the paper is as follows. In section~\ref{sec:ABM} we briefly describe the agent based simulations that we will use a benchmark.
+The structure of the paper is as follows. In section~\ref{sec:ABM} we briefly describe the agent based simulations that we will use as benchmark.
 In sec.~\ref{sec:useir} we present the uSEIR and study the solutions for uniform microscopic parameters. In sec.~\ref{sec:titr} we consider the
 non-uniformity in the incubation and recovery times and in sec.~\ref{sec:r} we discuss the non-uniformity in the infection rate per unit time and discuss the universality principle.
 
@@ -39,62 +42,98 @@ non-uniformity in the incubation and recovery times and in sec.~\ref{sec:r} we d
 
 Agent-based models (ABMs) are microscopic computer simulation based on ``agents'' that can interact with each other, as well as with a computer-defined environment \cite{Hunter2017}. Because agents can make their own decisions in the model based on the rules given to them, ABMs can capture unexpected aggregate phenomena that result from combined individual behaviours in a model. In particular ABMs can incorporate easily stochastic parameters as well as an heterogeneous population.
 
-This paper uses the MESA package \footnote{\url{https://github.com/projectmesa/mesa}} to prepare an ABM simulation of the spread of a epidemic in a fully susceptible, fully homogeneous population. The agents in the model are called ''turtles'', following the nomenclature of the NetLogo \footnote{\url{http://ccl.northwestern.edu/netlogo/index.shtml}} software. The turtle inhabit a square grid and follow a clock which ticks linearly. At each clock tick, all the turtles move in the grid. The sequence in which the turtles move is chosen at random in each tick, and the movement itself is a random step between cells.
+In the context of an epidemic, agents have four possible states: Susceptible (S), Exposed (E), Infectious(I) and Removed (R). Only infectious agents can induce the change of state of another susceptible agent to that of exposed. Each exposed agent necessarily becomes infectious after an incubation time, $t_i$, while each infectious agent remains in this category during the recovery/removal time, $t_r$. In a real epidemic this time would be the interval of time during which an individual remains infectious. It can move to the removed
+category either because it dies, recovers or gets isolated. All these outcomes are equivalent as regards the evolution of the epidemic, which 
+ is monitored by the fraction of agents in states $S(t), E(t), I(t), R(t)$ at any given time. 
 
-To simulate the evolution of an epidemics the Turtle World is inhabited with $n$ turtles, out of which $n_s$ are susceptible and a small (but as we shall see significant) number, $n_i$ are infectious. At each clock tick infectious (I) turtles have a probability of infecting any susceptible (S) turtle they found in their neighbourhood. Two turtles are considered neighbours if they share the same square. Also, for any given turtle, all turtles located in the eight squares that surround its own are considered neighbours. One can visualise the spacial notion assuming that the squares have a width of 1 m, and thus two turtles closer than 2 m are considered to be neighbours.
+We will consider two types of ABMs. One in which a number $N$ of individuals progressing in the S-E-I-R categories move in a homogeneous space and get exposed by proximity to infected neighbours with some probability. The number of contacts per unit time of each individual is homogeneous in this case, but the probability of infection in each contact can be taken constant or varied according to some distribution.
+The second type of models assumes the evolution  on a network where the agents have varying number of contacts. 
 
-The probability for an infectious turtle to infect a susceptible neighbour can be computed from the basic reproductive number, $R_0$, defined as the average number of contacts per unit time during the period of infectiousness. Thus:
+\subsection{Spatially homogeneous ABM}
 
+We use the MESA package \footnote{\url{https://github.com/projectmesa/mesa}} to simulate the spread of an outbreak in a fully susceptible, fully homogeneous population. The agents in the model are called ''turtles'', following the nomenclature of the NetLogo \footnote{\url{http://ccl.northwestern.edu/netlogo/index.shtml}} software. 
+A two-dimensional Turtle World is divided in a grid of equal size cells, and inhabited by $N$ turtles. At the initial time the turtles occupy a randomly chosen cell and  at each clock tick they do a random move to a neighbouring cells or stay in the same one. 
+
+To simulate the evolution of an epidemics, a small number of turtles are infectious , $I_0$, at the initial time, while $S_0 = N-I_0$ are susceptible. At each clock tick infectious (I) turtles have a probability of exposing any susceptible (S) turtle they find in their neighbourhood. Two turtles are considered neighbours if they share the same cell or are in  neighbouring ones. 
+
+The probability for an infectious turtle to expose a susceptible neighbour is related to the basic reproductive number, $R_0$,  defined as the average number of exposed turtles that any infected turtle realises per unit time during its period of infectiousness, $t_r$, or equivalently
+the average number of turtles exposed by any given infected turtle in a fully susceptible population. Thus:
 \begin{equation}
-R_0 = c \times p \times t_r
+R_0 = c \times p \times t_r,
+\label{eq:r0cptr}
 \end{equation}
+where $c$ is the average number of contacts, $p$ the infection probability per unit time and contact, and $t_r$ measures the time of infectiousness. 
 
-Where $c$ is the average number of contacts, $p$ the infection probability, and $t_r$ measures the time of infectiousness. Notice that $t_r$ can be read as a ``recovery time" after which the turtle recovers from the infection, or simply (and more realistically) as a ``removal time'', in which the infected turtle is isolated and therefore can no longer infect others.
-
-The average number of contacts can be always found by running the simulation without infected turtles. In the case of a fully homogeneous (and large) population, c is simply:
-
+The average number of contacts can be always found by running the simulation without infected turtles. For the rules described before, and in the case of an homogeneous population, c is simply:
 \begin{equation}
-c = 9 \frac{n}{a},
+c = 9 \frac{N}{A}-1,
 \end{equation}
 %
-where $a$ is the area of the grid cells and 9 accounts for the number of cells that describe the neighbourhood. Therefore, the infection probability can be obtained as:
-
+where $A$ is the total number of grid cells and 9 is the number of  neighbouring cells of any given cell (including itself). Therefore, the infection probability can be obtained as:
 \begin{equation}
 p = \frac{R_0}{c \cdot t_r}.
 \end{equation}
+At each step a random number is thrown for each susceptible neighbour of an infected turtle. It the random number is smaller than the infection probability, the turtle becomes exposed and the clock time of this event is recorded, $t_{s\rightarrow e}^{(i)}$. At each tick all the exposed turtles are examined and eventually turned into infectious when 
+$t - t^{(i)}_{s\rightarrow e} > t_i$, where $t$ is the time measure by the World's clock and $t_i$ corresponds to the incubation time. Again, the time at which the transition to infectious happens is recorded, $t^{(i)}_{e\rightarrow i}$, and the turtle remains infectious until $t - t^{(i)}_{e\rightarrow i} > t_r$, in which case becomes recovered (or removed).
+Notice that the simulation allows the use of uniform or stochastic parameters indistinctly. In the stochastic case each turtle has its own $t_i, t_r$ which are thrown according to a specified distribution (exponential, gamma, Weibull, etc). To make the infection probability stochastic, $p$ is sampled from a suitable distribution (Poisson, Gamma, Negative binomial, etc.).
 
-At each step a random number is thrown for each susceptible neighbour of an infected turtle. It the random number is smaller than the infection probability, the turtle becomes exposed and the clock time ($t_e$) is recorded. At each tick all the exposed turtles are examined and eventually turned into infectious when
-$t - t_e > t_i$, where $t$ is the time measure by the World's clock and $t_i$ corresponds to the incubation time. Again, the time at which the transition happens is recorded ($t_i$). The turtle remains infectious until $t - t_i > t_r$, in which case becomes recovered (or removed).
-Notice that the simulation allows the use of uniform or stochastic parameters indistinctly. In the stochastic case each turtle stores its own $t_i, t_r$ which are thrown according to a specified distribution (e.g, Exponential, Gamma, Weibull, etc.). To make the infection probability stochastic, $R_0$ is sampled from a suitable distribution (Poisson, Gamma, Negative binomial, etc.).
+The simulation is run for a number of steps which is typically chosen to be large compared with the ``infection time units'', e.g., if the infection time is measured in days each simulation tick may be 1/5 to /10 of a day. At each step the software records the turtles in each category and thus provides (in the limit of small clock ticks) the functions $S(t), E(t), I(t)$ and $R(t)$, which can be directly compared with the predictions of the solutions of the SEIR differential equation models.
 
-The simulation is run for a number of steps which is typically chosen to be large compared with the ``infection time units'', e.g., if the infection time is measured in days each simulation tick may be 1/5 to /10 of a day. At each step the software records the turtles in each category and thus provides (in the limit of small clock ticks) the functions S(t), E(t), I(t) and R(t), which can be directly compared with the predictions of the solutions of the differential equation models.
+\subsection{ABM on networks}
+
+A non-uniform number of contacts per agent in the population can be described via the evolution of the epidemic on a network with variable topology \cite{}. The spread of epidemics on networks is an area of intense research, see for example \cite{} for a review.
+
+A network is just a graph \(\{G,E\}\)
+consisting on
+nodes \(G=\{n_i\}_{i=1}^N\) and edges linking two nodes, \(E=\{e_{i,j}\}\). We say that
+two nodes \(n_a\) and \(n_b\) are connected if \(e_{ab}\in E\). The number
+of edges attached to a node \(n_a\) is called its degree and labelled
+\(k_a\).
+
+In the context of the spread of an infectious disease, each node is
+an agent, and the edges represent the contacts. Each contact links two agents that can expose each other if one is infectious and the other susceptible. The number of edges is therefore the number of contacts. The spread of the disease emerges from the local interaction between nodes via the edges. More concretely, in each time step, any infected node $i$ selects randomly one the edges attached to it, for example $e_{i,j}$, and infects the adjacent node, $j$, with a uniform probability $p$.
+After its recovery time, $t_r$, the agent becomes removed and therefore has potentially exposed up to  
+\begin{eqnarray}
+R_0 = {\rm Min}(p t_r, k),
+\end{eqnarray}
+agents, where $k$ is the number of contacts of the infecting agent. 
+ We could use a different rule of the time evolution, by for example assuming that at each step each infecting agent exposes all its contacts with some probability $p$. In this case we would have
+ \begin{eqnarray}
+ R_0= p k t_r. 
+ \end{eqnarray}
+These are two different assumptions about the time evolution, which might represent different real situations. The first one would correspond to a case where an agent infects with a constant rate (i.e there are no superspreaders). The second one corresponds to a case where agents have an infecting power proportional to the number of their contacts. A real epidemic is probably somewhere in between.
+
+ There is empirical experience that realistic social networks have some key properties that might be relevant for the rate of spread of an epidemic.  These networks are are scale-free, that is the distribution of the degree (i.e. the number of contacts per node) has the form \(P(k)\sim k^{-\gamma}\). In such networks the dispersion of the number of edges is large. Realistic networks have also a large clustering coefficient, which measures the probability that two nodes connected to a third, are also connected among themselves. Intuitively, it is clear that the spread of a disease in a network with large clustering is less efficient, because it is difficult for the infectious agent to jump between clusters.
+
+In our study we will concentrate on a particular one-parameter family of scale-free networks described by Klemm and Eguiluz (KE)
+\cite{Klemm_2002}, where the average local clustering can be tuned with the free parameter, \(\mu\). In Fig.~\ref{fig:KE} we show the distribution of $k$ on the KE networks varying $\mu$, compared to a random network with no clustering . Even if two networks share the number of nodes, edges and the degree distribution, they can look very different if the average clustering coefficient, $C_i$ is different, with
+\begin{eqnarray}
+C_i \equiv \frac{2|\{e_{jk}\setminus e_{ji},e_{ki},e_{jk}\in E\}|}{k_i(k_i-1)}\,.
+\end{eqnarray}
+In Figs.~\ref{fig:networks} we show two networks that differ only in the  different clustering properties.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.45\linewidth]{ke_05_09.pdf} \includegraphics[width=.45\linewidth]{ke_05_01.pdf}
+\caption{Two examples of KE network with 500 nodes, mean degree \(\langle k \rangle=9.93\) and different clustering: \(\langle C_i \rangle = 0.5\) (\(\mu=0.9\)) (Left) and \(\langle C_i \rangle = 0.07\) ( \(\mu=0.1\)) (Right)}
+\label{fig:networks}
+\end{figure}
 
 \section{Unitary SEIR model}
 \label{sec:useir}
-We start by considering a model with compartments for susceptible, exposed, infected and recovered individuals at any given time $t$ \cite{}. To be precise we define these categories
-as:
-\begin{itemize}
-\item $S(t)$: number of susceptible individuals at time $t$.
-%that is those that can be infected if in contact with an infected
-\item $E(t)$: number of exposed individuals at time $t$, that is those that will become infected after an incubation time,$t_i$.
-%Note that the exposed individuals that will never become infected are part either of susceptible\footnote{Of course there could be individuals that are immunized, but those are out of the count, there are not part of any category that matters here. }
-\item $I(t)$: number of individuals at time $t$ that can infect other people. They remain in this category for time $t_r$. This time might be the natural time of recovery or the time it takes to isolate the individual (thus this category is sometimes also dubbed ``removed'' in addition of the more usual ``recovered'').
-% it is in any case the time that it takes for an infected individual to stop infecting, at that moment the individual is declared recovered.
-\item $R(t)$: number of recovered (or removed) individuals.
-% that contain any individual that was infected in the past and is no longer infectious either because it died, fully recovered or fully isolated so that its probabilty to infect is zero.
-\end{itemize}
-There is a unitarity condition in this model.  Each individual must be in one of the S,E,I or R categories. Therefore the number of (non-immunised) individuals in the population, $N$, is a constant:
+Assuming the number of agents is sufficiently large, it is to be expected that the dynamics of the microscopic system can be described by a set of differential equations for the variables $S(t), E(t), I(t), R(t)$ \cite{Kermack1927}. There is a unitarity condition in this model. Each individual must be in one of the S, E, I or R categories. Therefore the number of  individuals in the population, $N$, is a constant:
 \begin{eqnarray}
 S(t)+ E(t)+I(t)+R(t) = N.
 \end{eqnarray}
-But there must also be a relation between the rates at which these different individuals move from one category to the next. An infection process is that in which an infected individual gets in contact with a susceptible one. Let us call $r_{S\rightarrow E}$ the rate of infection per unit time
-per infected individual and per susceptible individual. The number of susceptible individuals gets reduced by those that become exposed between $[t, t+dt]$, that is:
+There must also be a relation between the rates at which these different individuals move from one category to the next. An infection process is that in which an infected individual gets in contact with a susceptible one. Let us call $r_{S\rightarrow E}$ the rate of infection per unit time
+per infected individual and per susceptible individual. The number of susceptible individuals gets reduced by those that become exposed between $[t, t+dt]$, that is\footnote{Note that in the particle physics language, this equation is equivalent to the rate of collisions in fixed-target experiment where of a flux of infectious agents collide with a target of susceptible agents. The rate would correspond to a cross-section times velocity of the incoming particles.}:
 \begin{eqnarray}
 d S(t) = - r_{S\rightarrow E} I(t) S(t) dt.
 \label{eq:basic}
 \end{eqnarray}
-In the simplest approximation, if the incubation and recovery time of all individuals have the same values, then we must also have that the individuals that become exposed at time
-$t$ are those that move from category $S\rightarrow E$ at time $t$ minus those that move from $E\rightarrow I$. But the latter must be the ones that entered the exposed category in time $t-t_i$. Therefore we have:
+This is the basic equation that assumes that an average description of the microscopic process is possible. 
+In the simplest approximation, if the incubation and recovery time of all individuals have the same values, we must also have that the individuals that become exposed at time
+$t$ are those that move from category $S\rightarrow E$  minus those that move from $E\rightarrow I$. But the latter must be the ones that entered the exposed category in time $t-t_i$. Therefore we have:
 \begin{eqnarray}
 d E(t) &=& -d S(t) + d S(t-t_i) \theta(t-t_i) ,\nonumber\\
 d I(t) &=& -d S(t-t_i) \theta(t-t_i)+ d S(t-t_i-t_r) \theta(t-t_i-t_r),\nonumber\\
@@ -102,23 +141,25 @@ d R(t) &=& - d S(t - t_i - t_r) \theta(t-t_i-t_r).\nonumber
 \label{eqs:cor}
 \end{eqnarray}
 
-The initial conditions to these equations start with a fixed $N$ and a number of infected individuals at time $t=0$, $I[0]$, so that $S(0) = N-I(0)$, while $E(0)=0$ and $R(0)=0$.
+The initial conditions to these equations start with a fixed $N$ and a number of infected individuals at time $t=0$, $I(0)= I_0$, so that $S(0)=S_0 = N-I_0$, while $E(0)=0$ and $R(0)=0$.
 In the  equations above, the number of initially infected individuals does not recover, but we can easily force this with the substitution in eq.~(\ref{eq:basic}):
 \begin{eqnarray}
 I(t) \rightarrow \tilde{I}(t) \equiv I(t) - I(0) \theta(t-t_r).
 \end{eqnarray}
-These equations depend only on three variables, namely $r_{S\rightarrow E}$, $t_i$ and $t_r$, which in principle are the same parameters appearing in the classical SEIR.
-The basic reproduction number, $R_0$, defined as the average number of individuals infected by any given infected individual in a fully susceptible population corresponds to the combination:
+These equations depend only on three variables, namely $r_{S\rightarrow E}$, $t_i$ and $t_r$, which in principle are the same parameters appearing in the classical SEIR models. In terms of the 
+basic reproduction number, $R_0$,  corresponds to the combination:
 \begin{eqnarray}
 r_{S\rightarrow E} = {R_0\over N t_r}.
 \end{eqnarray}
 
-Since $R_0$ is clearly proportional to $t_r$, it follows that $r_{S\rightarrow E}$ is not. In a microscopic description of the infected process we expect that the rate $r_{S\rightarrow E}$ is basically the product of the number of contacts per unit time and the probability of infection per contact.
+Since $R_0$ is clearly proportional to $t_r$ , it follows that $r_{S\rightarrow E}$ is not. In a microscopic description of the infected process we expect that the rate $r_{S\rightarrow E}$ is basically the product of the number of contacts per unit time and the probability of infection per contact (see eqs.~(\ref{eq:r0cptr})):
+\begin{eqnarray}
+r_{S\rightarrow E} = {p c \over N}.
+\end{eqnarray}
+The  formulation of SEIR in the form of eqs.~(\ref{eqs:cor}) we will refer to in the following as uSEIR. We are not aware of this precise formulation in the literature, although variations of classical SEIR models have been considered to represent fixed $t_i$ and $t_r$ \cite{}. 
 
-The  formulation of SEIR in the form of eqs.~(\ref{eqs:cor}) we will refer to in the following as uSEIR. Although we are not aware of this precise formulation in the literature, similar ideas of keeping track of delay have been discussed, mostly in the context of SIR in refs. \cite{}.
-
-  We can confront both solutions to an agent-based simulations, the details of which are summarized in the Appendix A.
-In Fig.~\ref{fig:fixed} we show the curve for the fraction of infected individuals as a function of time measured from 10 independent simulations in a population of $10^4$ agents with 10 being infected at the initial time, and fixed parameters $t_i$, $t_r$ and $r_{S\rightarrow E}$ for all agents.
+  We can confront the uSEIR and classical SEIR solutions to the ABMs simulations, matching the basic microscopic parameters. 
+In Fig.~\ref{fig:fixed} we show the curve for the fraction of infected individuals as a function of time measured from 10 independent simulations in a population of $10^4$ agents with a fraction of infectious agents of $10^{-3}$ at $t=0$, and assuming fixed parameters $t_i$, $t_r$ and $r_{S\rightarrow E}$ for all the agents.
 The uSEIR solution agrees very well with the simulations, while the classical SEIR predicts a wider and less pronounced peak.
 
 \begin{figure}[h!]
@@ -128,16 +169,16 @@ The uSEIR solution agrees very well with the simulations, while the classical SE
   \label{fig:fixed}
    \end{figure}
 
-  This is maybe not surprising since classical SEIR assumes that the times $t_i$ and $t_e$ are averages, that is they are not uniform in the population. In most realistic cases, not all individuals have the same incubation or recovery period, and certainly not all individuals have the same number of contacts and probability of infection per contact. We consider the effect of these different non-uniformities.
+  This is not surprising since classical SEIR is only valid when  $t_i$ and $t_e$ are distributed exponentially, that is they are not uniform in the population. In most realistic cases, not all individuals have the same incubation or recovery period, and certainly not all individuals have the same number of contacts and probability of infection per contact. In the following, we consider the effect of these different non-uniformities.
 
 \section{Non-uniform $t_i$ and $t_r$ }
 \label{sec:titr}
 
- Non-uniformities can be incorporated in the uSEIR equations by considering different categories of individuals. For example, the population divides   into those with different incubation periods, $t_i^{(i)}$, so we have $S_i(t)$ as the susceptible individuals in the $i$-th category of incubation time. Each category follows its usual progression $S_i\rightarrow E_i \rightarrow I_i \rightarrow R_i$, but the important point to notice is that a given susceptible individual in category $i$ becomes an exposed individual in the same category $i$, but can get infected from any infectious individual in any category, $I_j$. If we assume that the capability to infect per unit time is independent on the category. This means that the number of susceptible individuals in category $i$ change as they become exposed according to:
+ Non-uniformities can be incorporated in the uSEIR equations by considering different categories of individuals. For example, the population divides   into those with different incubation periods, $t_i^{(i)}$, so we have $S_i(t)$ as the susceptible individuals in the $i$-th category of incubation time. Each category follows its usual progression $S_i\rightarrow E_i \rightarrow I_i \rightarrow R_i$, but the important point to notice is that a given susceptible individual in category $i$ becomes an exposed individual in the same category $i$, but can get infected from any infectious individual in any category, $j$. If we assume that the capability to infect per unit time is independent on the category, the number of susceptible individuals in category $i$ changes as they become exposed according to:
 \begin{eqnarray}
-d S_i(t) = - r_{S\rightarrow E} I(t) S_i(t) dt.
+d S_i(t) = - r_{S\rightarrow E} \tilde{I}(t) S_i(t) dt.
 \end{eqnarray}
-while eqs.~(\ref{eq:cor}) will still be valid for the exposed, infected and recovered in each category $i$, taking the incubation period as that corresponding to this category, $t^{(i)}$.
+while eqs.~(\ref{eqs:cor}) will still be valid for the exposed, infected and recovered in each category $i$, taking the incubation period as that corresponding to this category, $t^{(i)}$.
 
 Summing over all the categories, the first equation leads to:
 \begin{eqnarray}
@@ -147,62 +188,61 @@ while in the others we get
 \begin{eqnarray}
 d E(t) &=& -d S(t) + \sum_i d S(t-t^{(i)}_i) \theta(t-t^{(i)}_i) ,\nonumber\\
 d I(t) &=& \sum_i  \left\{-d S(t-t^{(i)}_i) \theta(t-t^{(i)}_i)+ d S(t-t^{(i)}_i-t_r) \theta(t-t^{(i)}_i-t_r)\right\},\nonumber\\
-d R(t) &=& \sum_i \left\{- d S(t - t^{(i)}_i - t_r) \theta(t-t^{(i)}_i-t_r)\right\}.\nonumber
+d R(t) &=& \sum_i \left\{- d S(t - t^{(i)}_i - t_r) \theta(t-t^{(i)}_i-t_r)\right\}.
 \label{eqs:corint}
 \end{eqnarray}
-Obviously in the limit of $t^{(i)}$ varying continuously the sum becomes an integral
+Obviously in the limit of $t_i^{(i)}$ varying continuously the sum becomes an integral
 \begin{eqnarray}
 \sum_i  (...) \rightarrow \int dt_i P(t_i) (...), \;\;\; \int_0^\infty dt_i P(t_i) = 1.
 \end{eqnarray}
 We can similarly assume subcategories for varying $t_r$ and the modification would be analogous.
 
-\subsubsection{Recovering classical SEIR}
+\subsection{Recovering classical SEIR}
 
 The case where the probabilities are exponential, the integro-differential equations can be reduced to regular differential ones, of the classical SEIR type.
 
- Let's assume
+ Let us assume
 \begin{eqnarray}
 P(t_i) = {1\over \langle t_i\rangle} e^{-t_i/\langle t_i\rangle},
 \end{eqnarray}
 and define
 \begin{eqnarray}
-F(t) &\equiv& \int_0^\infty dt_iP(t_i) S'(t-t_i) \theta(t-t_i) = \int_0^t dt_i P(t_i)  S'(t-t_i) \nonumber\\
+f(t) &\equiv& \int_0^\infty dt_i P(t_i) S'(t-t_i) \theta(t-t_i) = \int_0^t dt_i P(t_i)  S'(t-t_i) \nonumber\\
 &=& \int_0^t dz P(t-z) S'(z).
 \end{eqnarray}
 The derivative of this function is related to that of $E(t)$, using eq.~(\ref{eqs:corint}),
 \begin{eqnarray}
-F'(t) = {1\over \langle t_i\rangle} \left({d S\over dt}-F(t)\right) = - {1\over \langle t_i\rangle} {dE\over d t}(t),
+f'(t) = {1\over \langle t_i\rangle} \left({d S\over dt}-F(t)\right) = - {1\over \langle t_i\rangle} {dE\over d t}(t),
 \end{eqnarray}
 so up to a constant
 \begin{eqnarray}
-F(t) = -{E(t)\over \langle t_i\rangle} +C.
+f(t) = -{E(t)\over \langle t_i\rangle} +C.
 \end{eqnarray}
-Since $F(0) = E(0) =0$, the constant must vanish and the equations reduce to:
+Since $f(0) = E(0) =0$, the constant must vanish and the equations reduce to:
 \begin{eqnarray}
 {d S\over dt} &=& - r_{S\rightarrow E} \tilde{I}(t) S(t),\nonumber\\
 {d E\over dt} &=& -{d S\over d t} - {1 \over \langle t_i\rangle} E(t) ,\nonumber\\
 {d I\over dt} &=& {1 \over \langle t_i\rangle} E(t) -{1\over \langle t_i\rangle} E(t-t_r) \theta(t-t_r),\nonumber\\
-{d R\over d t} &=&  {1\over  \langle t_i\rangle} E(t-t_r) \theta(t-t_r),\nonumber\\
+{d R\over d t} &=&  {1\over  \langle t_i\rangle} E(t-t_r) \theta(t-t_r).
 \end{eqnarray}
-
 If we add also an exponential distribution for the recovery time we need the function
 \begin{eqnarray}
-G(t) \equiv {1\over \langle t_i\rangle } \int dt_r P(t_r) E(t-t_r) \theta(t-t_r),
+g(t) \equiv {1\over \langle t_i\rangle } \int dt_r P(t_r) E(t-t_r) \theta(t-t_r),
 \end{eqnarray}
 which for an exponential with average $\langle t_r\rangle$ satisfies
 \begin{eqnarray}
-G'(t) = {E(t)\over \langle t_r\rangle \langle t_i\rangle} - {G(t)\over  \langle t_r\rangle} = {I'(t)\over \langle t_r \rangle},
+g'(t) = {E(t)\over \langle t_r\rangle \langle t_i\rangle} - {G(t)\over  \langle t_r\rangle} = {I'(t)\over \langle t_r \rangle},
 \end{eqnarray}
 and therefore
 \begin{eqnarray}
-G(t) = {I(t)\over \langle t_r \rangle} + C,
+g(t) = {I(t)\over \langle t_r \rangle} + C,
 \end{eqnarray}
 where $C= -I(0)/\langle t_r \rangle$.
 Finally we also need to average over $t_r$ in the second term of the function $\tilde{I}$:
 \begin{eqnarray}
-\int d t_r P(t_r) \tilde{I}(t) = I(t) - I(0) \left(1- e^{-t/\langle t_r\rangle}  \right) \equiv \bar{I}(t)
+\int d t_r P(t_r) \tilde{I}(t) = I(t) - I(0) \left(1- e^{-t/\langle t_r\rangle}  \right) \equiv \bar{I}(t).
 \end{eqnarray}
- So finally the equations are:
+Finally the equations are:
 \begin{eqnarray}
 {d S\over dt} &=& - r_{S\rightarrow E} \bar{I}(t) S(t),\nonumber\\
 {d E\over dt} &=& -{d S\over d t} -{1 \over \langle t_i\rangle} E(t) ,\nonumber\\
@@ -210,11 +250,10 @@ Finally we also need to average over $t_r$ in the second term of the function $\
 {d R\over d t} &=&  {1\over  \langle t_r\rangle} (I(t)-I(0)),\nonumber\\
 \label{eqs:seirexp}
 \end{eqnarray}
-which up to the $I(0)$ are the classical SEIR equations. If $I(0)$ is very small, the extra terms
- can  be neglected.
+which up to the $I(0)$ terms, are the classical SEIR equations. If $I(0)$ is very small, these extra terms can  be neglected.
 
 We can easily translate this situation to the agent simulations.
-We start by considering the exponential distributions for $t_i$ and $t_r$, while we maintain the rate of infection constant. The comparison of the SEIR solution of eqs.~(\ref{eqs:seirexp}) and simulations are shown in Fig.~\ref{fig:exp}, where as expected the agreement is good, even if the variance is much larger than in the fixed parameters case.
+We start by considering the exponential distributions for $t_i$ and $t_r$, while we maintain the rate of infection constant. The comparison of the SEIR solution of eqs.~(\ref{eqs:seirexp}) and the homogeneous ABM simulation is shown in Fig.~\ref{fig:exp}. The agreement as expected is good, even if the variance is much larger than in the fixed parameters case.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=10cm]{expseir.pdf}
@@ -222,21 +261,21 @@ We start by considering the exponential distributions for $t_i$ and $t_r$, while
   \label{fig:exp}
    \end{figure}
 
-    Assuming an exponential distribution for the incubation and recovery times are however not realistic. A more realistic distribution seems to be the  gamma distribution, $\Gamma[k,\theta]$ \cite{}. For the Covid19 epidemic the parameters have been estimated to be $(k,\theta) \simeq (5.8, 0.948)$, corresponding to an average $\langle t_i\rangle \simeq 5.5$days. For the recovery time we assume the same distribution with parameters $(6.5,1)$.
+ An exponential distribution for the incubation and recovery times are however not realistic. A more realistic distribution seems to be the  gamma distribution, $\Gamma[k,\theta]$ \cite{}. For the Covid19 epidemic the parameters have been estimated to be $(k,\theta) \simeq (5.8, 0.948)$, corresponding to an average $\langle t_i\rangle \simeq 5.5$days. For the recovery time we assume the same distribution with parameters $(6.5,1)$.
 
-We compare the results of the agent simulations with the exponential and gamma distributions in Fig.~\ref{fig:expvsgamma}. We also include the result of solving discretely the eqs.~(\ref{eq:corint}). Classical SEIR does not give a good description of the simulations in this case.
+We compare the results of the ABMs simulations with the exponential and gamma distributions in Fig.~\ref{fig:expvsgamma}. Classical SEIR does not give a good description of the simulations in this case, while solving the integro-differential eqs.~(\ref{eqs:corint}) does ?? 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=10cm]{expvsgamma.pdf}
-  \caption{ Curve of the fraction of infected individuals as a function time from the average of 10 agent simulations with $t_i$ and $t_r$ distributed in the population according to the gamma distributions (blue) and exponentials (red). The simulation has parameters in both cases $N=10^4$ and $I(0)=10$ with $R_0=3.5$, $\langle t_i\rangle=5.5$ and $\langle t_r\rangle=6.5$.  }
-  \label{fig:exp}
+  \includegraphics[width=10cm]{GGvsSEIR.pdf}
+  \caption{ Fraction of infected individuals as a function time from the average of 10 turtle simulations with $t_i$ and $t_r$ distributed in the population according to the gamma distributions (blue) compared to classical SEIR. The simulation has parameters in both cases $N=10^4$ and $I(0)=10$ with $R_0=3.5$, $\langle t_i\rangle=5.5$ and $\langle t_r\rangle=6.5$.  }
+  \label{fig:expvsgamma}
    \end{figure}
 
 \section{Non-uniform rate and universality }
 \label{sec:r}
-A different situation is when the rate of infection is non-uniform across the population. It is important to stress that the rate depends on two independent parameters: the number of contacts per infected individual, which critically depends on the clustering properties of the social network,  and the probability of infection per contact. Non-uniformity can originate in either of the two elements, but the implications as we will see are quite different. In this section we will consider the simplest case of a uniform number of contacts, but a non-uniform infecting probability per contact.
+A different situation is when the rate of infection is non-uniform across the population. It is important to stress that the rate depends on two independent parameters: the number of contacts per infected individual, which critically depends on the clustering properties of the social network,  and the probability of infection per contact. Non-uniformity can originate in either of the two properties. In this section we will consider the simplest case of a uniform number of contacts, but a non-uniform infecting probability per contact.
 
-\subsection{Non-uniformity in the probability of infection}
+\subsection{Non-uniform rate: the probability of infection}
 \label{sec:prob}
 
 We could separate the population in individuals that infect others with different rates. The rate might depend on the type of infectious individual and the type of susceptible individual. Defining $r^{j}_{i}$ to be the rate at which an infected individual of type $j$ infects a susceptible individual of type $i$. The equations in this case are:
@@ -255,28 +294,23 @@ Assuming that the rates only depend on the type of infecting individual and not 
  \end{eqnarray}
  where $p^i$ is the proportion of individuals in category $i$.
 
- However, this result seems in conflict with what is found in practice, where the evolution of an epidemic seems very sensitive to the initial conditions, the fraction of immute individuals (herd immunity), the presence of superspreaders, etc.
-
-Non-uniformity is known to be very important in the evolution of an epidemic. One example is the relevance of the fraction of individuals for which the probability of infecting is zero, which in practice makes them immune. Their presence in a given population implies that the effective number of useful contacts gets reduced. The fraction of the population with zero infecting power is equivalent to the immune fraction. When this fraction is large enough  the epidemic may not start. This is the concept of herd immunity, used to measure the fraction of vaccinated population that can abort an epidemic. A very rough estimate for the fraction of herd immunity, $f_I$, would be
+ However, this result seems in conflict with the fact non-uniformity is known to be very important in the evolution of an epidemic \cite{}. One example of this is the relevance of the fraction of individuals for which the probability of infecting is zero, which in practice makes them immune. Their presence in a given population implies that the effective number of useful contacts gets reduced. The fraction of the population with zero infecting power is equivalent to the immune fraction. When this fraction is large enough  the epidemic may be aborted. This is the concept of herd immunity, used to measure the needed fraction of vaccinated population to abort an epidemic. A very rough estimate for the fraction of herd immunity, $f_I$, would be
    \begin{eqnarray}
   R_0 (1- f_I)  =1, \;\; f_I= 1-1/R_0.
    \end{eqnarray}
-   For Covid19, with $R_0 \sim 3$, $f_I \sim 0.7$, that is $70\%$ of the population. One would naively estimate then that in a given epidemic with this herd immunity would result in a
- fraction of  population that gets infected at some point of 70$\%$, but what we have seen is that the fraction is much larger, both in the SEIR equations as in the simulations. This is because of the time delay in the process, the fraction of recovered individuals grows slowly and is not effective in reducing the growth of the epidemic sufficiently, as if the fraction of immune individuals would be there from the start.
-
-  It has been argued that for Covid19 the distribution of $R_0$ across the population is well described by the negative binomial distribution, $NB[0.16,0.0437]$, which has average 3.5 but a large dispersion. This distribution implies that about $60\%$ of the population would not infect anyone (not far from the naive herd immunity), while there must be few individuals that have a very large rate of infection, the famous superspreaders.
+   For Covid19, with $R_0 \sim 3$, $f_I \sim 0.7$, that is $70\%$ of the population. One would naively expect then that in a given epidemic with this herd immunity would result in a fraction of  population that gets infected at some point of 70$\%$, but in the previous examples are larger fraction is found. This is because of the time delay in the process, the fraction of recovered individuals grows slowly and is not effective in reducing the growth of the epidemic sufficiently, as if the fraction of immune individuals would be there from the start. Note that in the SEIR concept, the immune population is part of the susceptible, that pass by the categories $E\rightarrow I \rightarrow R$ but have zero infecting power when they are $I$ so they are inert. In practice the evolution of the epidemic would be identical if we just dropped them from the start and readjust the rate not to include them. 
+ 
+  It has been argued that for Covid19 the distribution of $R_0$ across the population is well described by the negative binomial distribution, NB[0.16,0.0437] \cite{}, which has average 3.5 but a large dispersion. This distribution implies that about $60\%$ of the population is immune  (not far from the naive herd immunity), while there must be few individuals that have a very large rate of infection, the famous superspreaders.
 
   In Fig.~\ref{fig:turtlesraw} shows the evolution of 100 simulations assuming fixed $t_i$ and $t_r$ while $R_0$ is drawn from a the negative binomial. The average of those histories as well as the result of
-  uSEIR using the average $\langle R_0\rangle$. Clearly the variance if huge, and the average is not a good representation of the individual epidemic histories. The uSEIR curve misses completely the outliers.
+  uSEIR using the average $\langle R_0\rangle$. Clearly the variance is huge, and the average is not a good representation of the individual epidemic histories. The uSEIR curve misses completely the outliers.
 
  \begin{figure}[h!]
   \centering
 \includegraphics[width=10cm]{turtlesraw.pdf}
-  \caption{ Curve of the fraction of infected individuals as a function time from the average of 100 agent simulations with $R_0$ distributed in the population according to negative binomial (cyan) with $t_i$ and $t_r$ are fixed. The average of those histories is the red curve. The simulation has parameters in both cases $N= 2 10^4$ and $I(0)=10$ with $\langle R_0\rangle=3.5$, $t_i=5.5$ and $t_r=6.5$. This is compared to uSEIR (black).}
+  \caption{ Curve of the fraction of infected individuals as a function time from the average of 100 agent simulations with $R_0$ distributed in the population according to negative binomial (cyan) with $t_i$ and $t_r$ fixed. The average of those histories is the red curve. The simulation has parameters  $N= 2 10^4$ and $I(0)=10$ with $\langle R_0\rangle=3.5$, $t_i=5.5$ and $t_r=6.5$. This is compared to uSEIR (black).}
   \label{fig:turtlesraw}
    \end{figure}
-
-
   There is an interesting observation however. If all the curves are time-translated  to make their maxima coincide, they fall in the uSEIR curve, as shown on the right Fig.~\ref{fig:turtlesshift}.
   \begin{figure}[h!]
   \centering
@@ -285,7 +319,7 @@ Non-uniformity is known to be very important in the evolution of an epidemic. On
   \label{fig:turtlesshift}
    \end{figure}
 
-  This fact can be interpreted as follows. The position of the peak is non universal, because it depends very sensitively on the initial conditions, ie. what is the infectious potential of the first infectious agents. Since all epidemic starts with a small number of individuals, we cannot invoke the central limit theorem for the initial stages of an outbreak. These stages have a large variability, however as the exponential growth ensures that the averaging effect of the population starts to be effective. The curve around the maximum is in fact universal in the sense that it depends on the average of the basic parameters and not on the initial conditions, as we now show from the uSEIR equations.
+  This fact can be interpreted as follows. The position of the peak is non universal, because it depends very sensitively on the initial conditions, in particular on what is the infectious potential of the first infectious agents. Since all epidemic starts with a small number of individuals, we cannot invoke the central limit theorem for the initial stages of an outbreak. These stages have a large variability, however as the exponential grows the averaging effect of the population starts to be effective. The curve around the maximum is in fact universal in the sense that it depends on the average of the basic parameters and not on the initial conditions, as we now show from the uSEIR equations.
 
   \subsection{Universality and the logistic curve}
 
@@ -322,6 +356,7 @@ F(t) = F_0 \large(1 - \tanh^2\left[ a (t-t_{\rm max})\right]\large),
 with
 \begin{eqnarray}
 a\equiv r \sqrt{{t_r F_0\over 2 t_i+t_r}}.
+\label{eq:a}
 \end{eqnarray}
 This is the universal function that drives the evolution of the infected, exposed and susceptible+recovered individuals near the maximum. The maximum of the infected is at $t_{\rm max}-t_i$ for the infected, while the maximum(minimum) for the exposed(susceptible+recovered) is at $t_{\rm max}$. The integral of this function from $[-\infty, \infty]$ is
 \begin{eqnarray}
@@ -346,62 +381,61 @@ the precise value is no easy to get. An estimate can be obtained as follows. Nea
 F_0 \sim {N-S(t_{\rm max})\over 2 r (t_r +  t_i)}.
 \end{eqnarray}
 The only dependence on the initial condition remains in $t_{\rm max}$.
-In Fig.~\ref{fig:logistic} we compare the numerical solution to the uSEIR equations to the analytic expression of eq.~(\ref{e:tanh}), fixing the parameters $F_0$ and $t_{\rm max}$  the position and height from the numerical solution. Varying the initial conditions, that is the fraction of the number of infected individuals at $t=0$ shifts $t_{\rm max}$ but leaves the curve otherwise invariant. As can be seen the analytical solution describes very well the uSEIR solution.
+In Fig.~\ref{fig:logistic} we compare the numerical solution to the uSEIR equations to the analytic expression of eq.~(\ref{e:tanh}), fixing the parameters $F_0$ and $t_{\rm max}$  the position and height from the numerical solution. Varying the initial conditions, that is the fraction of the number of infected individuals at $t=0$ shifts $t_{\rm max}$ but leaves the curve otherwise invariant. As can be seen the analytical solution describes very well the uSEIR solution. The agreement is better for smaller values of $t_i$ and $t_r$. 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=10cm]{logistica.pdf}
   \caption{Comparison of the results from the uSEIR equations for fixed parameters $R_0=2.1$, $t_i=3$ and $t_r=3$, and the analytical result of  eq.~(\ref{eq:tanh}) with the parameters $F_0$ and $t_{\rm max}$ tuned with the height and position of the peak. The two pairs of solid curves correspond to a fraction of infected individuals of $10^{-3}$ and $5\cdot 10^{-4}$. The two dashed lines are the same function shifted in time.}
-  \label{fig:dispersion}
+  \label{fig:logistic}
    \end{figure}
 
-   \section{Non-uniform rate: clustering  }
+ \section{Non-uniform rate: networks  }
 \label{sec:r}
 
-The rate may also be non-uniform because the number of contacts per infecting individual is inhomegeneous in the population. The most efficient way to describe this situation is via the evolution of the epidemic on a network with variable topology \cite{}.
-
-A network is just a graph \(\{G,E\}\)
-consisting on
-nodes \(G=\{n_i\}_{i=1}^N\) and edges linking two nodes, \(E=\{e_{i,j}\}\). We say that
-two nodes \(n_a\) and \(n_b\) are connected if \(e_{ab}\in E\). The number
-of edges attached to a node \(n_a\) is called its degree and labelled
-\(k_a\).
-
-In the context of the spread of an infectious disease, the nodes are
-the individuals, and the edges represent the net of individuals
-that have direct contact with him, and are therefore susceptible of being infected by it. The number of edges is therefore the number of contacts. The spread of the disease emerges from the local interaction between nodes via edges. More concretely, in each time step, any infected node $i$ selects randomly one the edges attached to it, for example $e_{i,j}$, and infects the adjacent node, $j$, with a uniform probability $p$.
-
- There is empirical experience that realistic networks have some key
-properties that might be relevant for the rate of spread of an epidemic.
-They are scale-free, that is the distribution of the degree (i.e. the number of contacts per node) has the form \(P(k)\sim k^{-\gamma}\). In such networks the dispersion of the number of edges is large. Realistic networks have a large clustering coefficient, which measures the probability that two nodes connected to a third, are also connected among themselves. Intuitively, it is clear that the spread of a disease in a network with large clustering is less efficient, because it is difficult for the infectious agent to jump between clusters.
-
-We will concentrate on a particular
-one-parameter family of scale-free networks described by Klemm and Eguiluz (KE)
-\cite{Klemm_2002}, where the average local clustering can be tuned with the free parameter, \(\mu\). In Fig.~\ref{fig:KE} we show the distribution of $k$ on the KE networks varying $\mu$, compared to a random network with no clustering . Even if two networks share the number of nodes, edges and the degree distribution, they can look very different if the average clustering coefficient, $C_i$ is different, with
+We now consider the non-homogeneities in the social contacts. 
+We have generated a number of KE networks with $\langle k \rangle = 40$ and different clustering. On this networks we evolve the epidemic using the time progression explained in section~\ref{sec:net}, that corresponds to a basic reproductive number
 \begin{eqnarray}
-C_i \equiv \frac{2|\{e_{jk}\setminus e_{ji},e_{ki},e_{jk}\in E\}|}{k_i(k_i-1)}\,.
+R_0 = {\rm Min}(p t_r, k). 
 \end{eqnarray}
-In Figs.~\ref{fig:networks} two networks with different $C_i$ are shown.
+We take $p=2 \times 10^{-3}$, $t_r= 10^3 u$, $t_i=500 u$ where $u$ are  basic time units (one contact activated per node). Since  $\langle k \rangle \gg p t_r$, $R_0 \sim 2$. We arbitrarily define 1 day= 200 $u$. 
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.45\linewidth]{ke_05_09.pdf} \includegraphics[width=.45\linewidth]{ke_05_01.pdf}
-\caption{Two examples of KE network with 500 nodes, mean degree \(\langle k \rangle=9.93\) and different clustering: \(\langle C_i \rangle = 0.5\) (\(\mu=0.9\)) (Left) and \(\langle C_i \rangle = 0.07\) ( \(\mu=0.1\)) (Right)}
-\end{figure}
-
-\subsection{Simulating the epidemics evolution on a network}
-
-The evolution of the disease in any of the networks is monitored by the number of nodes in states $S, E, I, R$ at any step. Starting with a fraction of  infected nodes, the infected nodes proceed to infect other susceptible nodes with the rules described above,  changing their state to $E$. The nodes in state $E$ move to state $I$, with a delay given by a fixed incubation time. In state $I$ the start infecting susceptibles connected to them, and remain doing so before a the removal time, $t_r$, elapses at which point they change state to $R$ and remain there.
-
-If Fig.~\ref{fig:useirvsnet} we show the evolution of infected individuals as a function of time for various networks with different clustering properties. The simulation points correspond to the average of xx simulations after a shift of $t_{\rm max}$ to match the position of the maxima. We find very good agreement with the universal behaviour that derives from uSEIR, eq.~(\ref{eq:tanh}), in all cases. However the fitted value of $a$ changes with the topology of the network. In Fig.~\ref{} we show the dependence of
-$a$ on the clustering parameter $\mu$. This is in clear contrast with the situation we observed for the inhomogenities in the probability of infection, where the curves matched the average value of the microscopic parameter $a$. The networks we are considering have all the same average degree and therefore the same average number of contacts. Since the probability of infection is also constant, this means that the average
-microscopic $a$ is the same, but the {\it effective} one varies with the clustering.
 \begin{figure}[htbp]
 \centering
  \includegraphics[width=.8\linewidth]{uSEIR.pdf}
 \caption{Average fraction of infected nodes with time in networks with equal average degree but different clustering properties. The curves are fits  to eq.~(\ref{eq:tanh}), leaving $a$, $F_0$ and $t_{\rm max}$ as free parameters. }
+\label{fig:net}
+\end{figure}
+In Fig.~\ref{fig:net} we show the evolution of infected individuals as a function of time for various networks with different clustering properties. The simulation points correspond to the average of XX simulations after a shift of $t_{\rm max}$ to match the position of the maxima, which as expected makes also in this case their variance very  small. We observe a clear dependence on the clustering parameter, but nevertheless the data in all cases is extremely well described by  the universal behaviour  derived from uSEIR, eq.~(\ref{eq:tanh}). The lines
+are three parameter fits $(a, I_0, t_{\rm max})$ of the form:
+\begin{eqnarray}
+I(t)= I_0 \left[1 - {\rm tanh}^2\left(a (t-t_{\rm max}))\right].
+\label{eq:iasym}
+\end{eqnarray}
+uSEIR predicts, according to eqs.~(\ref{eq:tanh}) and (\ref{eq:a}),
+\begin{eqnarray}
+a=  \sqrt{{\langle r\rangle I_0\over 2 t_i + t_r}} \simeq \sqrt{{I_0\over N} { p \over  2 t_i + t_r}} \simeq 0.2 {\rm day}^{-1},
+\end{eqnarray}
+while 
+\begin{eqnarray}
+ I_0 = \langle r \rangle t_r F_0 = p t^2_r {F_0\over N}.
+ \end{eqnarray}
+ Both parameters would therefore be given in terms of the average microscopic parameters. 
+
+ In Figs.~\ref{fig:aovI0} we show the dependence of
+$a \sqrt{I_0/N}^{-1}$ and $I_0$, on the local clustering $\langle C \rangle$. For small clustering we observe that $a \sqrt{I_0/N}^{-1}$ is roughly constant, as expected from uSEIR, and matches rather well the microscopic average value. Instead $I_0$ decreases with clustering, even for small clustering. This effect can be interpreted as an increase 
+in the supression of the fraction of susceptible population: clustering seems to screen the access to the susceptible. Note that if we substitute in the uSEIR equations $S$ by $f_c S$, where $f_c$ is the screening factor, the asymptotic solution is as in eq.~(\ref{eq:iasym})
+with $I_0 \rightarrow f_c I_0$, while $a \sqrt{I_0/N}^{-1}$ remains invariant. This explains the behaviour found at small clustering. 
+
+At large clustering, the parameters $I_0$ and $a$ show a non-trivial dependence, not captured by the uSEIR asymptotic solution, although logistic remains a extremely good description of the data of the epidemic evolution. It would be interesting to understand this behaviour in terms of the microdynamics. 
+
+
+\begin{figure}[htbp]
+\centering
+ \includegraphics[width=.8\linewidth]{CdepAA.pdf} \includegraphics[width=.75\linewidth]{CdepbAA.pdf}
+\caption{Dependence of the fit parameters $a \sqrt{I_0/N}^{-1}$ and $I_0$ on the local clustering. }
+\label{fig:aovI0}
 \end{figure}
 
-The clustering property of the network affects the speed of propagation of the disease in the population, much like the index of refraction, affects the velocity of propagation of a particle in a medium. This was observed before ?? \cite{}.
 
 
 
